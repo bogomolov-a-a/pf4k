@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter
+  xmlns="https://github.com/spotbugs/filter/3.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+  <!-- exclude metamodel checks-->
+  <Match>
+    <Or>
+      <Class name="org.artembogomolova.demo.webapp.main.domain.auth.Authority_"/>
+      <Class name="org.artembogomolova.demo.webapp.main.domain.auth.Role_"/>
+      <Class name="org.artembogomolova.demo.webapp.main.domain.auth.User_"/>
+      <Class name="org.artembogomolova.demo.webapp.main.domain.core.IdentifiedEntity_"/>
+      <Class name="org.artembogomolova.demo.webapp.main.domain.core.PhysicalAddress_"/>
+      <Class name="org.artembogomolova.demo.webapp.main.domain.core.Person_"/>
+    </Or>
+  </Match>
+  <!--equals&hashCode methods implements in basic class by convention. -->
+  <Match>
+    <And>
+      <Bug pattern="EQ_UNUSUAL"/>
+      <Class name="org.artembogomolova.demo.webapp.main.domain.core.IdentifiedEntity"/>
+    </And>
+  </Match>
+  <!--false alarms -->
+  <Match>
+    <And>
+      <Bug code="BC"/>
+      <Class name="org.artembogomolova.demo.webapp.main.domain.auth.PredefinedUserRole"/>
+    </And>
+  </Match>
+  <Match>
+    <Bug pattern="NP_NULL_PARAM_DEREF"/>
+    <Or>
+      <Package name="org.artembogomolova.demo.webapp.test.db.dao.core"/>
+      <Package name="org.artembogomolova.demo.webapp.test.db.dao.auth"/>
+    </Or>
+  </Match>
+  <Match>
+    <And>
+      <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+      <Class name="org.artembogomolova.demo.webapp.test.db.dao.EntityModifier"/>
+    </And>
+  </Match>
+  <Match>
+    <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE"/>
+  </Match>
+  <Match>
+    <And>
+      <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+      <Class name="org.artembogomolova.demo.webapp.main.validation.CountryCodeAndZipCodeValidator"/>
+    </And>
+  </Match>
+</FindBugsFilter>
