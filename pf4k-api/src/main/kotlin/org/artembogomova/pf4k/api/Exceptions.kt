@@ -8,3 +8,5 @@ package org.artembogomova.pf4k.api
 open class BasicModuleException(message: String, cause: Exception? = null) : Exception(message, cause)
 
 class PreconditionCheckedException(message: String, cause: Exception? = null) : BasicModuleException(message, cause)
+
+class ApiDescriptorNotFoundException(message: String, cause: Exception? = null) : BasicModuleException(message, cause)
