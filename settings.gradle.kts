@@ -9,4 +9,5 @@
 
 rootProject.name = "pf4k"
 includeBuild("build-plugins")
-include("pf4k-api")
+include("pf4k-api", "pf4k-impl", "pf4k-demo")
+
