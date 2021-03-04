@@ -91,11 +91,8 @@ class LoadableModuleLibraryDependency internal constructor(
     val version: String,
     val classifier: String,
 ) {
-    var path: Path
-        get() = path
-        internal set(value) {
-            path = value
-        }
+    lateinit var path: Path
+        internal set
 }
 
 /**
@@ -113,11 +110,8 @@ class LoadableModuleModuleDependency(
     val version: ApiVersion,
     val moduleType: ModuleType
 ) {
-    var path: Path
-        get() = path
-        internal set(value) {
-            path = value
-        }
+    lateinit var path: Path
+        internal set
 
 }
 
@@ -168,9 +162,6 @@ class LoadableModuleDescriptor(
     val dependencyDescriptors: LoadableModuleDependencyDescriptorListType,
     val apiPointDescriptors: ApiPointDescriptorListType
 ) {
-    var moduleRef: ILoadableModule
-        get() = moduleRef
-        internal set(value) {
-            moduleRef = value
-        }
+    lateinit var moduleRef: ILoadableModule
+        internal set
 }

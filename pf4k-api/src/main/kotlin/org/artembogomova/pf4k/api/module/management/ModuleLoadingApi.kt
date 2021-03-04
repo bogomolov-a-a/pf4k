@@ -53,4 +53,6 @@ interface IModuleManager {
     fun excludeModuleByUuid(uuid: UUID, exceptionList: MutableExceptionListType): Boolean
     fun includeModuleByUuid(uuid: UUID, exceptionList: MutableExceptionListType): Boolean
     fun sendStopSignalDependentModules(uuid: UUID, exceptionList: MutableExceptionListType): Boolean
+    fun startCoreModule(applicationStartPath: String, args: Array<String>)
+    fun getExcludedModuleUuidList(): List<String>
 }

@@ -168,7 +168,20 @@ interface ILoadableModule {
      */
     fun listDependencies(dependencyType: DependencyType? = null): LoadableModuleDependencyDescriptorListType
 
+    /**
+     * Get any resources from module by [uuid] for initialization process invoking module.
+     *
+     * @param [uuid] module uuid
+     * @return if uuid not found empty list
+     * @author bogomolov-a-a
+     */
     fun getInitializedResourcesForAnotherModuleByUuid(uuid: UUID): InitializedResourceListType
+
+    /**
+     * Main method of module.
+     * In simple case contains code handle message or [Thread.sleep] function call
+     */
+    fun run(args: Array<String> = arrayOf())
     /**************
      ****EVENTS****
      **************/
