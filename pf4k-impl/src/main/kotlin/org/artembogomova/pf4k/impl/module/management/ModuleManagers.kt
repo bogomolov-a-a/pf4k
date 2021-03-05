@@ -46,9 +46,7 @@ private class ModuleManager(
 
     override fun sendStopSignalDependentModules(uuid: UUID, exceptionList: MutableExceptionListType): Boolean = false
 
-    override fun startCoreModule(applicationStartPath: String, args: Array<String>) {
-        //no op;
-    }
+    override fun startCoreModule(applicationStartPath: String, args: Array<String>): Boolean = false
 
     override fun getExcludedModuleUuidList(): List<String> = listOf()
 
