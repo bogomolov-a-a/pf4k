@@ -10,3 +10,6 @@ open class BasicModuleException(message: String, cause: Exception? = null) : Exc
 class PreconditionCheckedException(message: String, cause: Exception? = null) : BasicModuleException(message, cause)
 
 class ApiDescriptorNotFoundException(message: String, cause: Exception? = null) : BasicModuleException(message, cause)
+
+open class BasicApplicationRuntimeException(message: String, cause: Exception? = null) : BasicModuleException(message, cause)
+class CoreModuleStartingException(message: String, cause: Exception? = null) : BasicApplicationRuntimeException(message, cause)
