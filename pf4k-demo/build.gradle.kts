@@ -1,10 +1,10 @@
 plugins {
     id("common-build-plugin")
 }
-dependencies {
+/*dependencies {
     implementation(project(":pf4k-impl"))
-}
-configurations.implementation.get().isCanBeResolved = true
+}*/
+/*configurations.implementation.get().isCanBeResolved = true
 val dependenciesSet = configurations.runtimeClasspath.get().asFileTree
 val classpathEntryNamePattern = " common/%s"
 val classPathAttributeName = "Class-Path"
@@ -15,7 +15,7 @@ dependenciesSet.forEach {
     /*
  * https://stackoverflow.com/questions/33758244/add-classpath-in-manifest-file-of-jar-in-gradle-in-java-8
  */
-    val classpathEntryName = classpathEntryNamePattern.format(it.name)
+/*    val classpathEntryName = classpathEntryNamePattern.format(it.name)
     classpath += if (i++ == 0) {
         String.format("%0\$-60s", classpathEntryName)
     } else {
@@ -37,4 +37,4 @@ tasks.register("commonJarCopy", Copy::class.java) {
         from(it.absolutePath)
     }
     into("$buildDir/libs/common")
-}
+}*/
