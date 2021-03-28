@@ -52,5 +52,3 @@ Application is:
       ModuleManager.ModuleLoader start core module.
     - directory "plugins" contains one or more plugged modules, each into separated directory "{uuid}". Where uuid - unique plugin identifier. Dependencies
       locate in the subdirectory "dependencies"
-  
- 
