@@ -10,9 +10,8 @@ plugins {
  */
 allprojects {
     val projectGroup: String by project
-    val projectVersion: String by project
     group = projectGroup
-    version = projectVersion
+    version = getProjectVersion()
 }
 
 tasks.withType<Wrapper>().configureEach {
