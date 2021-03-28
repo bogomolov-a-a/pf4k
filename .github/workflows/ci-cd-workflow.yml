@@ -1,0 +1,29 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test-check-coverage:
+    continue-on-error: false
+    timeout-minutes: 6
+    strategy:
+      fail-fast: true
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 15
+      - name: fetch sources
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build with gradle
+        run: |
+          ./gradlew clean buildWithCoverage \
+           -Psonar.login=${{ secrets.SONAR_TOKEN }} -Psonar.organization=${{ github.repository_owner }} -Psonar.host.url=https://sonarcloud.io

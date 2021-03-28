@@ -1,0 +1,14 @@
+name: "Verify type labels for repository"
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ opened, labeled, unlabeled, synchronize ]
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: zwaldowski/match-label-action@v2
+        with:
+          allowed: 'fix, feature, documentation, tests, config'
