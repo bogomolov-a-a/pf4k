@@ -40,8 +40,7 @@ Bingo! I want to develop this framework, because:
 
 ## Structure application
 
-Application is:
-
+Application contains:
 - application.jar -> main file with simplify manifest.
     - The manifest contains "Application-Name" attribute for using in preferences.
     - Main class - ModularityApplication. Don't extend it.
