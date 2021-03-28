@@ -8,14 +8,20 @@
  */
 
 rootProject.name = "pf4k"
-includeBuild("build-plugins")
 include(
-    "pf4k-core:pf4k-api",
-    "pf4k-core:pf4k-basic-impl",
-    "pf4k-core:pf4k-core-module-impl",
-    "pf4k-core:pf4k-pluggable-module-impl",
-    "pf4k-core:pf4k-module-management-impl",
-    "pf4k-core:pf4k-app-impl",
-    "pf4k-core:pf4k-app-launcher",
-    "pf4k-demo"
+    "pf4k-api",
+    "pf4k-impl:pf4k-basic-impl",
+    "pf4k-impl:pf4k-core-module-impl",
+    "pf4k-impl:pf4k-pluggable-module-impl",
+    "pf4k-impl:pf4k-module-management-impl",
+    "pf4k-impl:pf4k-app-impl",
+    "pf4k-impl:pf4k-app-launcher",
+    "pf4k-plugins"
 )
+pluginManagement {
+    plugins {
+        id("maven-publish") apply false
+        id("publishing") apply false
+        id("common-build-plugin") apply false
+    }
+}
