@@ -54,7 +54,6 @@ buildscript {
         }
 
     }
-
 }
 plugins.apply("common-base-plugin")
 val USERNAME_ENV_NAME = "USERNAME"
