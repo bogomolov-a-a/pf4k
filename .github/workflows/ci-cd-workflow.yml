@@ -24,6 +24,13 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build with gradle
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_PACKAGE_REGISTRY_URL: https://maven.pkg.github.com/
+          GITHUB_REPOSITORY: ${{ secrets.GITHUB_REPOSITORY }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_SHA: ${{ github.sha }}
         run: |
-          ./gradlew clean buildWithCoverage \
+          ./gradlew clean buildWithCoverage publish \
            -Psonar.login=${{ secrets.SONAR_TOKEN }} -Psonar.organization=${{ github.repository_owner }} -Psonar.host.url=https://sonarcloud.io
