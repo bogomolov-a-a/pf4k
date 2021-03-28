@@ -13,6 +13,9 @@ allprojects {
     val projectVersion: String by project
     group = projectGroup
     version = projectVersion
+    if (project != rootProject) {
+        project.group = (project.group as String) + project.path.replace("~/:/, ‘.’".toRegex(), "")
+    }
 }
 
 tasks.withType<Wrapper>().configureEach {

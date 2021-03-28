@@ -10,12 +10,12 @@
 rootProject.name = "pf4k"
 include(
     "pf4k-api",
-    "pf4k-impl:pf4k-basic-impl",
-    "pf4k-impl:pf4k-core-module-impl",
-    "pf4k-impl:pf4k-pluggable-module-impl",
-    "pf4k-impl:pf4k-module-management-impl",
-    "pf4k-impl:pf4k-app-impl",
-    "pf4k-impl:pf4k-app-launcher",
+    "pf4k-basic-impl",
+    "pf4k-core-module-impl",
+    "pf4k-pluggable-module-impl",
+    "pf4k-module-management-impl",
+    "pf4k-app-impl",
+    "pf4k-app-launcher",
     "pf4k-plugins"
 )
 pluginManagement {

@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":pf4k-impl:pf4k-app-launcher"))
-    implementation(project(":pf4k-impl:pf4k-app-impl"))
+    implementation(project(":pf4k-app-launcher"))
+    implementation(project(":pf4k-app-impl"))
 }
 val COMMON_APP_LAUNCHER_PLUGIN_ID = "common-app-launcher-plugin"
 gradlePlugin {
