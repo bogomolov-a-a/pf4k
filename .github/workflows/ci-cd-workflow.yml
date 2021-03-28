@@ -31,7 +31,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ secrets.GITHUB_REPOSITORY }}
           GITHUB_REF: ${{ github.ref }}
           GITHUB_SHA: ${{ github.sha }}
-          GITHUB_BUILD_PLUGINS_REPOSITORY_ENV_NAME: https://maven.pkg.github.com/bogomolov-a-a/common-build-plugins
+          GITHUB_BUILD_PLUGINS_REPOSITORY: https://maven.pkg.github.com/bogomolov-a-a/common-build-plugins
         run: |
           ./gradlew clean buildWithCoverage publish \
            -Psonar.login=${{ secrets.SONAR_TOKEN }} -Psonar.organization=${{ github.repository_owner }} -Psonar.host.url=https://sonarcloud.io
