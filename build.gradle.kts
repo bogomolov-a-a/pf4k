@@ -29,7 +29,7 @@ repositories {
 
 buildscript {
     dependencies {
-        classpath("org.artembogomolova.common:common-build-plugins:1.0.0")
+        classpath("org.artembogomolova.common:common-build-plugins:1.0.5")
     }
 
     val GITHUB_BUILD_PLUGINS_REPOSITORY_ENV_NAME = "GITHUB_BUILD_PLUGINS_REPOSITORY"
@@ -55,7 +55,9 @@ buildscript {
         }
 
     }
+
 }
+plugins.apply("common-base-plugin")
 val USERNAME_ENV_NAME = "USERNAME"
 val TOKEN_ENV_NAME = "TOKEN"
 val login: String? by project
@@ -67,7 +69,7 @@ val mavenPackageRegistryUri: String =
     (pf4kRegistryUrl ?: (System.getenv("MAVEN_PACKAGE_REGISTRY_URL") + System.getenv("GITHUB_REPOSITORY")))
 
 subprojects {
-    plugins.apply("common-build-plugin")
+    plugins.apply("common-no-ext-tool-build-plugin")
     plugins.apply("maven-publish")
     plugins.apply("publishing")
 

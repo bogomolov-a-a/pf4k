@@ -1,5 +1,4 @@
 plugins {
-    id("common-build-plugin")
     `kotlin-dsl`
 }
 
