@@ -1,0 +1,27 @@
+name: Build and publish to registry
+on:
+  create:
+    tag: [ v* ]
+
+env:
+  IMAGE_NAME: ${{ github.event.repository.name }}
+  REGISTRY_URL: ghcr.io
+jobs:
+  realease-image-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 15
+      - name: Build and deploy to github package registry
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_PACKAGE_REGISTRY_URL: https://maven.pkg.github.com/
+          GITHUB_REPOSITORY: ${{ secrets.GITHUB_REPOSITORY }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: ./gradlew clean assemble publish
