@@ -1,46 +1,50 @@
 package org.artembogomolova.pf4k.api.module.management
 
+import java.net.URLClassLoader
 import java.nio.file.Path
 import java.util.UUID
-import kotlin.properties.Delegates
+import org.artembogomolova.pf4k.api.module.ICoreModule
 import org.artembogomolova.pf4k.api.module.ILoadableModule
 import org.artembogomolova.pf4k.api.module.MutableExceptionListType
-import org.artembogomolova.pf4k.api.module.OnAfterUnloadEvent
-import org.artembogomolova.pf4k.api.module.OnBeforeUnloadEvent
-import org.artembogomolova.pf4k.api.module.OnFailedEvent
-import org.artembogomolova.pf4k.api.module.OnLoadEvent
-import org.artembogomolova.pf4k.api.module.OnResolvedEvent
+import org.artembogomolova.pf4k.api.module.management.event.ISubscriber
+import org.artembogomolova.pf4k.api.module.management.types.ApplicationDescriptor
+import org.artembogomolova.pf4k.api.module.management.types.ModuleStatistic
 import org.artembogomolova.pf4k.api.module.types.LoadableModuleDescriptor
 
+const val MODULE_DESCRIPTOR_PATH = "module-descriptor"
+
 interface IModuleDescriptorReader {
-    fun readFromModuleJar(modulePath: Path): LoadableModuleDescriptor
+
+    fun readFromModuleJar(moduleClassLoader: URLClassLoader): Result<LoadableModuleDescriptor>
 }
 
-interface IModuleLoader {
+interface IModuleDescriptorReaderFactory {
+    fun createModuleDescriptorReader(): IModuleDescriptorReader
+}
+
+object ModuleDescriptorReaderFactoryBuilder {
+    fun createFactory(className: String): IModuleDescriptorReaderFactory =
+        Class.forName(className).getConstructor().newInstance() as IModuleDescriptorReaderFactory
+}
+
+typealias  PathList = List<Path>
+
+interface IModuleLoader : ISubscriber {
     val descriptorReader: IModuleDescriptorReader
-    fun loadModules(exceptionList: MutableExceptionListType): Int
-    fun loadModule(modulePath: Path, exceptionList: MutableExceptionListType): Boolean
-    fun onResolve(event: OnResolvedEvent): Boolean
-    fun onLoad(event: OnLoadEvent): Boolean
-    fun onBeforeUnload(event: OnBeforeUnloadEvent): Boolean
-    fun onAfterUnload(event: OnAfterUnloadEvent): Boolean
-    fun onFailed(event: OnFailedEvent): Boolean
+    fun loadModules(modulePaths: PathList): List<Result<LoadableModuleDescriptor>>
+    fun loadModule(modulePath: Path): Result<LoadableModuleDescriptor>
     fun unloadModule(module: ILoadableModule, exceptionList: MutableExceptionListType): Boolean
     fun unloadModules(exceptionList: MutableExceptionListType): Int
     fun isAllDependenciesLoaded(uuid: UUID, exceptionList: MutableExceptionListType): Result<Boolean>
 }
 
-class ModuleStatistic {
-    var total by Delegates.notNull<Int>()
-    var loaded by Delegates.notNull<Int>()
-    var unloaded by Delegates.notNull<Int>()
-    var starting by Delegates.notNull<Int>()
-    var running by Delegates.notNull<Int>()
-    var failed by Delegates.notNull<Int>()
-    var stopping by Delegates.notNull<Int>()
-    var stopped by Delegates.notNull<Int>()
-    var included by Delegates.notNull<Int>()
-    var excluded by Delegates.notNull<Int>()
+interface IModuleLoaderFactory {
+    fun createModuleLoader(descriptorReader: IModuleDescriptorReader): IModuleLoader
+}
+
+object ModuleLoaderFactoryBuilder {
+    fun createFactory(className: String): IModuleLoaderFactory =
+        Class.forName(className).getConstructor().newInstance() as IModuleLoaderFactory
 }
 
 typealias ExcludedModuleListType = List<String>
@@ -55,7 +59,7 @@ interface IModuleManager {
     fun excludeModuleByUuid(uuid: UUID, exceptionList: MutableExceptionListType): Boolean
     fun includeModuleByUuid(uuid: UUID, exceptionList: MutableExceptionListType): Boolean
     fun sendStopSignalDependentModules(uuid: UUID, exceptionList: MutableExceptionListType): Boolean
-    fun startCoreModule(applicationStartPath: String, args: Array<String>): Boolean
+    suspend fun startCoreModule(applicationStartPath: String, args: Array<String>): Result<ICoreModule>
     fun getExcludedModuleUuidList(): ExcludedModuleListType
 }
 
@@ -67,8 +71,22 @@ interface IModuleManagerFactory {
     ): IModuleManager
 }
 
-object ModuleLoaderFactoryBuilder {
+object ModuleManagerFactoryBuilder {
     fun createFactory(className: String): IModuleManagerFactory =
         Class.forName(className).getConstructor().newInstance()
                 as IModuleManagerFactory
+}
+
+interface IApplicationDescriptorReader {
+
+    fun readFromModuleJar(moduleClassLoader: URLClassLoader): Result<ApplicationDescriptor>
+}
+
+interface IApplicationDescriptorReaderFactory {
+    fun createApplicationDescriptorReader(): IApplicationDescriptorReader
+}
+
+object ApplicationDescriptorReaderFactoryBuilder {
+    fun createFactory(className: String): IApplicationDescriptorReaderFactory =
+        Class.forName(className).getConstructor().newInstance() as IApplicationDescriptorReaderFactory
 }

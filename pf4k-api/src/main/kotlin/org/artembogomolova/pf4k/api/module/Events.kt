@@ -2,6 +2,7 @@ package org.artembogomolova.pf4k.api.module
 
 import java.nio.file.Path
 import org.artembogomolova.pf4k.api.module.management.IModuleManager
+import org.artembogomolova.pf4k.api.module.management.event.IOnEventContext
 import org.artembogomolova.pf4k.api.module.types.LoadableModuleDescriptor
 
 typealias  MutableExceptionListType = MutableList<Exception>
@@ -12,6 +13,10 @@ typealias  DependencyPathListType = List<Path>
  ****Manager events***
  ********************/
 
+abstract class BaseEventContext(
+    override val exceptionList: MutableExceptionListType
+) : IOnEventContext
+
 /**
  * Event triggered, when new module found in classpath.
  *
@@ -20,11 +25,11 @@ typealias  DependencyPathListType = List<Path>
  * @property [exceptionList] list of exceptions thrown in event method handler.
  * @author bogomolov-a-a
  */
-data class OnResolvedEvent(
+data class OnResolvedEventContext(
     val resolvedPath: Path,
     val dependencyPathList: DependencyPathListType,
-    val exceptionList: MutableExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 
 /**
  *  Event triggered, when new module loaded in memory.
@@ -33,10 +38,10 @@ data class OnResolvedEvent(
  *  @property [exceptionList] list of exceptions thrown in event method handler.
  *  @author bogomolov-a-a
  */
-data class OnLoadEvent(
+data class OnLoadEventContext(
     val descriptor: LoadableModuleDescriptor,
-    val exceptionList: MutableExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 
 /**
  *  Event triggered, when module preparing unloaded from memory.
@@ -45,10 +50,10 @@ data class OnLoadEvent(
  *  @property [exceptionList] list of exceptions thrown in event method handler.
  *  @author bogomolov-a-a
  */
-data class OnBeforeUnloadEvent(
+data class OnBeforeUnloadEventContext(
     val descriptor: LoadableModuleDescriptor,
-    val exceptionList: MutableExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 
 /**
  *  Event triggered, when module successful unloaded from memory.
@@ -57,10 +62,10 @@ data class OnBeforeUnloadEvent(
  *  @property [exceptionList] list of exceptions thrown in event method handler.
  *  @author bogomolov-a-a
  */
-data class OnAfterUnloadEvent(
+data class OnAfterUnloadEventContext(
     val descriptor: LoadableModuleDescriptor,
-    val exceptionList: MutableExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 
 /**
  * Event triggered, when module successful unloaded from memory.
@@ -71,11 +76,11 @@ data class OnAfterUnloadEvent(
  *  @author bogomolov-a-a
 
  */
-data class OnFailedEvent(
+data class OnFailedEventContext(
     val descriptor: LoadableModuleDescriptor,
     val moduleManager: IModuleManager,
-    val exceptionList: ExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 /*********************
  ****Module events***
  ********************/
@@ -86,10 +91,10 @@ data class OnFailedEvent(
  * @property [exceptionList] list of exceptions thrown in event method handler.
  * @author bogomolov-a-a
  */
-data class OnBeforeStartEvent(
+data class OnBeforeStartEventContext(
     val moduleManager: IModuleManager,
-    val exceptionList: MutableExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 
 /**
  * Event triggered, when module try to validate start ability.
@@ -99,11 +104,11 @@ data class OnBeforeStartEvent(
  * @property [exceptionList] list of exceptions thrown in event method handler.
  * @author bogomolov-a-a
  */
-data class OnPreconditionsValidateEvent(
+data class OnPreconditionsValidateEventContext(
     val descriptor: LoadableModuleDescriptor,
     val moduleManager: IModuleManager,
-    val exceptionList: MutableExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 
 /**
  * Event triggered, when module try to get resources from another module for self initialization.
@@ -112,10 +117,10 @@ data class OnPreconditionsValidateEvent(
  * @property [exceptionList] list of exceptions thrown in event method handler.
  * @author bogomolov-a-a
  */
-data class OnInitializedDependenciesWaitEvent(
+data class OnInitializedDependenciesWaitEventContext(
     val moduleManager: IModuleManager,
-    val exceptionList: MutableExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 
 /**
  * Event triggered, when module try to initialize self resources.
@@ -125,11 +130,11 @@ data class OnInitializedDependenciesWaitEvent(
  * @property [exceptionList] list of exceptions thrown in event method handler.
  * @author bogomolov-a-a
  */
-data class OnInitializeResourcesEvent(
+data class OnInitializeResourcesEventContext(
     val descriptor: LoadableModuleDescriptor,
     val moduleManager: IModuleManager,
-    val exceptionList: MutableExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 
 /**
  * Event triggered, when module successful started.
@@ -137,9 +142,9 @@ data class OnInitializeResourcesEvent(
  * @property [exceptionList] list of exceptions thrown in event method handler.
  * @author bogomolov-a-a
  */
-data class OnAfterStartEvent(
-    val exceptionList: MutableExceptionListType
-)
+data class OnAfterStartEventContext(
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 
 /**
  * Event triggered, when module preparing to stop.
@@ -148,10 +153,10 @@ data class OnAfterStartEvent(
  * @property [exceptionList] list of exceptions thrown in event method handler.
  * @author bogomolov-a-a
  */
-data class OnBeforeStopEvent(
+data class OnBeforeStopEventContext(
     val descriptor: LoadableModuleDescriptor,
-    val exceptionList: MutableExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 
 /**
  * Event triggered, when module preparing resources release.
@@ -160,10 +165,10 @@ data class OnBeforeStopEvent(
  * @property [exceptionList] list of exceptions thrown in event method handler.
  * @author bogomolov-a-a
  */
-data class OnResourcesReleaseEvent(
+data class OnResourcesReleaseEventContext(
     val moduleManager: IModuleManager,
-    val exceptionList: MutableExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)
 
 /**
  * Event triggered, when module successful stopped.
@@ -172,7 +177,7 @@ data class OnResourcesReleaseEvent(
  * @property [exceptionList] list of exceptions thrown in event method handler.
  * @author bogomolov-a-a
  */
-data class OnAfterStopEvent(
+data class OnAfterStopEventContext(
     val moduleManager: IModuleManager,
-    val exceptionList: MutableExceptionListType
-)
+    override val exceptionList: MutableExceptionListType
+) : BaseEventContext(exceptionList)

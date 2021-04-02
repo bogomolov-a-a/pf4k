@@ -3,15 +3,13 @@
  */
 package org.artembogomolova.pf4k.api.module
 
-import java.nio.file.Path
 import java.util.UUID
+import org.artembogomolova.pf4k.api.module.management.event.ISubscriber
 import org.artembogomolova.pf4k.api.module.types.ApiPointDescriptor
 import org.artembogomolova.pf4k.api.module.types.ApiPointMethodDescriptor
 import org.artembogomolova.pf4k.api.module.types.ApiVersion
-import org.artembogomolova.pf4k.api.module.types.InitializedResourceListType
-import org.artembogomolova.pf4k.api.module.types.LoadableModuleAvailableStatus
 import org.artembogomolova.pf4k.api.module.types.LoadableModuleDependencyDescriptorListType
-import org.artembogomolova.pf4k.api.module.types.LoadableModuleRuntimeStatus
+import org.artembogomolova.pf4k.api.module.types.LoadableModuleState
 import org.artembogomolova.pf4k.api.module.types.ModuleType
 import org.artembogomolova.pf4k.api.module.types.UUIDListType
 
@@ -82,6 +80,8 @@ enum class DependencyType {
     MODULE
 }
 
+typealias InitializedResourceResult = Result<Any>
+
 /**
  * Basic loadable module. Each module extends [Runnable], module is stopped,
  * when runnable method exit(from thread).
@@ -92,44 +92,9 @@ enum class DependencyType {
  *   - module.jar (module main jar)
  *
  */
-interface ILoadableModule : Runnable {
-    /**
-     * Each module has uuid as primary key.
-     *
-     */
-    val uuid: UUID
+interface ILoadableModule : ISubscriber {
 
-    /**
-     * Each module has version in semantic versioning presentation
-     *
-     */
-    val version: ApiVersion
-
-    /**
-     * Each module has unique name(as coordinate)
-     *
-     */
-    val name: String
-
-    /**
-     *[ModuleType.PLUGIN] for extension module, and [ModuleType.CORE] for main module application
-     */
-    val moduleType: ModuleType
-
-    /**
-     * Path, from which module loaded.
-     */
-    val modulePath: Path
-
-    /**
-     * Current available module status in module registry
-     */
-    val availableStatus: LoadableModuleAvailableStatus
-
-    /**
-     *  Current lifecycle status.
-     */
-    val runtimeStatus: LoadableModuleRuntimeStatus
+    val loadableModuleState: LoadableModuleState
 
     /**
      * For each module can be one or more public api interfaces for interaction with core module and another plugins.
@@ -149,7 +114,7 @@ interface ILoadableModule : Runnable {
     /**
      * @return true if this module is main(core)
      */
-    fun isCoreModule(): Boolean = ModuleType.CORE == moduleType
+    fun isCoreModule(): Boolean = ModuleType.CORE == loadableModuleState.moduleType
 
     /**
      * Filter module dependencies by type.
@@ -165,97 +130,12 @@ interface ILoadableModule : Runnable {
      * Get any resources from module by [uuid] for initialization process invoking module.
      *
      * @param [uuid] module uuid
-     * @return if uuid not found empty list
+     * @return initialized resource or [ResourceNotFoundExceptio] if resource not found.
      * @author bogomolov-a-a
      */
-    fun getInitializedResourcesForAnotherModuleByUuid(uuid: UUID): InitializedResourceListType
+    fun getInitializedResourcesForAnotherModuleByUuid(uuid: UUID, resourceName: String): InitializedResourceResult
 
-
-    /**************
-     ****EVENTS****
-     **************/
-
-    /**
-     * Event triggered before module start.
-     *
-     *  @param [event] event context.
-     *  @author bogomolov-a-a
-     */
-    fun onBeforeStart(event: OnBeforeStartEvent): Boolean
-
-    /**
-     * Typically:
-     *  - check core version(for plugged module).
-     *  - check environment variables,
-     *  - check plugged module parameters.
-     *  ..etc
-     *
-     *  @param [event] event context.
-     *  @author bogomolov-a-a
-     */
-    fun onPreconditionsValidate(event: OnPreconditionsValidateEvent): Boolean
-
-    /**
-     * Typically:
-     * - wait start dependencies(module).
-     *
-     * @param [event] event context.
-     *  @author bogomolov-a-a
-     */
-    fun onInitializedDependenciesWait(event: OnInitializedDependenciesWaitEvent): Boolean
-
-    /**
-     * Typically:
-     * - initialize self resources from resources another module and self state.
-     *
-     * @param [event] event context.
-     *  @author bogomolov-a-a
-     */
-    fun onInitializeResources(event: OnInitializeResourcesEvent): Boolean
-
-    /**
-     * Event triggered after module start.
-     * Typically:
-     *  - print information about module
-     *  - invoke some methods(?)
-     *
-     *  @param [event] event context.
-     *  @author bogomolov-a-a
-     */
-    fun onAfterStart(event: OnAfterStartEvent): Boolean
-
-    /**
-     * Event triggered before module module.
-     * Typically:
-     *  - wait stop dependencies(module) if necessary
-     *
-     *  @param [event] event context.
-     *  @author bogomolov-a-a
-     */
-    fun onBeforeStop(event: OnBeforeStopEvent): Boolean
-
-    /**
-     * Event triggered before resources release.
-     * Typically:
-     * - finalize state,
-     *  - clear all sensitive data.
-     *
-     * @param [event] event context.
-     * @author bogomolov-a-a
-     */
-    fun onResourcesRelease(event: OnResourcesReleaseEvent): Boolean
-
-    /**
-     * Event triggered after module start.
-     * Typically:
-     *  - report about successful stop*
-     *  - send signal to availability do restart this or unload.
-     *  - send stop signal to dependsOn module
-     *
-     *  @param [event] event context.
-     *  @author bogomolov-a-a
-     */
-    fun onAfterStop(event: OnAfterStopEvent): Boolean
+    suspend fun runModule()
 }
 
 /**
@@ -268,7 +148,7 @@ interface ICoreModule : ILoadableModule {
      * Main method of module.
      * In simple case contains code handle message or [Thread.sleep] function call
      */
-    fun run(args: Array<String> = arrayOf())
+    suspend fun run(args: Array<String>)
 }
 
 /**
@@ -281,4 +161,6 @@ interface IPluginModule : ILoadableModule {
      * Minimum version of core module supports this plugged module.
      */
     val requireCoreVersion: ApiVersion
+
+    fun isCompatibleWithCore(coreModule: ICoreModule): Boolean
 }
