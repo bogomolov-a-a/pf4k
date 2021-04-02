@@ -1,30 +1,30 @@
 package org.artembogomolova.pf4k.impl.launcher
 
-import java.util.jar.Manifest
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectReader
 import org.artembogomolova.pf4k.api.app.ModularizedApplicationBuilder
+import org.artembogomolova.pf4k.api.module.management.types.APPLICATION_DESCRIPTOR_PATH
+import org.artembogomolova.pf4k.api.module.management.types.ApplicationDescriptor
 
 object DefaultApplicationLauncher {
 
     const val APPLICATION_IMPL_CLASS_NAME_PROJECT_PROPERTY_NAME = "application.impl.class.name"
-    const val APPLICATION_IMPL_CLASS_NAME_PROPERTY = "Application-Impl-Class-Name"
-    private const val MANIFEST_URI = "META-INF/MANIFEST.MF"
+    const val APPLICATION_LAUNCHER_CLASS_NAME_PROJECT_PROPERTY_NAME = "application.launcher.class.name"
+    private val APPLICATION_DESCRIPTOR_READER: ObjectReader = ObjectMapper().reader().forType(ApplicationDescriptor::class.java)
 
     @JvmStatic
-    fun main(args: Array<String>) {
-        val manifest = getManifest()
-        val applicationClassName = getApplicationImplClassName(manifest)
+    suspend fun main(args: Array<String>) {
+        val applicationDescriptor = getApplicationDescriptor()
+        val applicationClassName = applicationDescriptor.applicationClassName
         ModularizedApplicationBuilder
             .createModularizedApplication(applicationClassName)
-            .run(manifest, args)
+            .run(applicationDescriptor.name, args)
     }
 
-    private fun getApplicationImplClassName(manifest: Manifest): String =
-        manifest.mainAttributes[APPLICATION_IMPL_CLASS_NAME_PROPERTY] as String
-
-    private fun getManifest(): Manifest {
-        val result: Manifest
-        javaClass.classLoader.getResource(MANIFEST_URI).openStream().use {
-            result = Manifest(it)
+    private fun getApplicationDescriptor(): ApplicationDescriptor {
+        val result: ApplicationDescriptor
+        javaClass.classLoader.getResource(APPLICATION_DESCRIPTOR_PATH).openStream().use {
+            result = APPLICATION_DESCRIPTOR_READER.readValue(it)
         }
         return result
     }
