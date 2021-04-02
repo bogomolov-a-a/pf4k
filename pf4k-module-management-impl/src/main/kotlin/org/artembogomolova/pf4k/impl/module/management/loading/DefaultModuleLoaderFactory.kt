@@ -49,13 +49,13 @@ internal class DefaultModuleLoader(override val descriptorReader: IModuleDescrip
         eventQueue.subscribe(this)
     }
 
-    override fun loadModules(modulePaths: PathList): List<Result<LoadableModuleDescriptor>> {
+    override suspend fun loadModules(modulePaths: PathList): List<Result<LoadableModuleDescriptor>> {
         val result: MutableList<Result<LoadableModuleDescriptor>> = mutableListOf()
-        modulePaths.forEach(this::loadModule)
+        modulePaths.forEach { loadModule(it) }
         return result.toList()
     }
 
-    override fun loadModule(modulePath: Path): Result<LoadableModuleDescriptor> {
+    override suspend fun loadModule(modulePath: Path): Result<LoadableModuleDescriptor> {
         val moduleClassLoader = createClassLoaderForModule(modulePath)
         val result = descriptorReader.readFromModuleJar(moduleClassLoader)
         if (result.isFailure) {
@@ -78,7 +78,7 @@ internal class DefaultModuleLoader(override val descriptorReader: IModuleDescrip
     private fun createIntercomException(resolvedEvent: IOnEventContext): BasicIntercomException =
         BasicIntercomException("event '${resolvedEvent}' can't handled. Cause:${resolvedEvent.exceptionList}")
 
-    private fun createClassInstanceByDescriptor(
+    private suspend fun createClassInstanceByDescriptor(
         moduleClassLoader: LoadableModuleClassLoader,
         descriptor: LoadableModuleDescriptor
     ): Result<LoadableModuleDescriptor> {
@@ -117,6 +117,6 @@ internal class DefaultModuleLoader(override val descriptorReader: IModuleDescrip
     @Suppress("UNCHECKED_CAST")
     override fun getAvailableEventContextTypes(): SubscriberEventTypeList = SUPPORTED_EVENT_CONTEXT_LIST as SubscriberEventTypeList
 
-    override fun handleEvent(eventContext: IOnEventContext): Boolean = ModuleLoaderEventHandler.handleEvent(this, eventContext)
+    override suspend fun handleEvent(eventContext: IOnEventContext): Boolean = ModuleLoaderEventHandler.handleEvent(this, eventContext)
 
 }

@@ -8,11 +8,11 @@ import org.artembogomolova.pf4k.api.module.OnInitializeResourcesEventContext
 import org.artembogomolova.pf4k.api.module.OnInitializedDependenciesWaitEventContext
 import org.artembogomolova.pf4k.api.module.OnPreconditionsValidateEventContext
 import org.artembogomolova.pf4k.api.module.OnResourcesReleaseEventContext
-import org.artembogomolova.pf4k.api.module.management.IOnEventContext
+
 import org.artembogomolova.pf4k.api.module.management.event.IOnEventContext
 
 internal object ModuleEventHandler {
-    fun handleEvent(loadableModule: AbstractLoadableModule, eventContext: IOnEventContext): Boolean {
+    suspend fun handleEvent(loadableModule: AbstractLoadableModule, eventContext: IOnEventContext): Boolean {
         if (isStartEvent(eventContext)) {
             return handleStartEvent(loadableModule, eventContext)
         }
@@ -48,7 +48,7 @@ internal object ModuleEventHandler {
     private fun isReleaseResourcesEvent(eventContext: IOnEventContext): Boolean =
         eventContext is OnResourcesReleaseEventContext
 
-    private fun handleStartEvent(loadableModule: AbstractLoadableModule, eventContext: IOnEventContext): Boolean {
+    private suspend fun handleStartEvent(loadableModule: AbstractLoadableModule, eventContext: IOnEventContext): Boolean {
         if (eventContext is OnBeforeStartEventContext) {
             return loadableModule.onBeforeStart(eventContext)
         }
@@ -58,7 +58,7 @@ internal object ModuleEventHandler {
         return handleInitializerEvent(loadableModule, eventContext)
     }
 
-    private fun handleInitializerEvent(loadableModule: AbstractLoadableModule, eventContext: IOnEventContext): Boolean {
+    private suspend fun handleInitializerEvent(loadableModule: AbstractLoadableModule, eventContext: IOnEventContext): Boolean {
         if (eventContext is OnPreconditionsValidateEventContext) {
             return loadableModule.onPreconditionsValidate(eventContext)
         }
@@ -69,7 +69,7 @@ internal object ModuleEventHandler {
 
     }
 
-    private fun handleIntercommunicationEvent(loadableModule: AbstractLoadableModule, eventContext: IOnEventContext): Boolean {
+    private suspend fun handleIntercommunicationEvent(loadableModule: AbstractLoadableModule, eventContext: IOnEventContext): Boolean {
         if (eventContext is OnInitializedDependenciesWaitEventContext) {
             return loadableModule.onInitializedDependenciesWait(eventContext)
         }

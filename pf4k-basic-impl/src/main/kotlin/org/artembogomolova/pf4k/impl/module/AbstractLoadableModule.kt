@@ -86,7 +86,7 @@ abstract class AbstractLoadableModule(
      *  @param [event] event context.
      *  @author bogomolov-a-a
      */
-    internal fun onBeforeStart(event: OnBeforeStartEventContext): Boolean {
+    internal open fun onBeforeStart(event: OnBeforeStartEventContext): Boolean {
         loadableModuleState.runtimeStatus = LoadableModuleRuntimeStatus.STARTING
         return true
     }
@@ -228,7 +228,7 @@ abstract class AbstractLoadableModule(
      *  @param [event] event context.
      *  @author bogomolov-a-a
      */
-    internal fun onAfterStart(event: OnAfterStartEventContext): Boolean = true
+    internal open fun onAfterStart(event: OnAfterStartEventContext): Boolean = true
 
     /**
      * Event triggered before module module.
@@ -239,7 +239,7 @@ abstract class AbstractLoadableModule(
      *  @author bogomolov-a-a
      */
 
-    internal fun onBeforeStop(event: OnBeforeStopEventContext): Boolean {
+    internal open fun onBeforeStop(event: OnBeforeStopEventContext): Boolean {
         loadableModuleState.runtimeStatus = LoadableModuleRuntimeStatus.STOPPING
         return true
     }
@@ -288,7 +288,7 @@ abstract class AbstractLoadableModule(
         return true
     }
 
-    final override fun handleEvent(eventContext: IOnEventContext): Boolean =
+    final override suspend fun handleEvent(eventContext: IOnEventContext): Boolean =
         ModuleEventHandler.handleEvent(this, eventContext)
 
     @Suppress("UNCHECKED_CAST")

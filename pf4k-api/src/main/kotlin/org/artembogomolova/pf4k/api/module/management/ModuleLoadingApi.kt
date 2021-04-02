@@ -31,8 +31,8 @@ typealias  PathList = List<Path>
 
 interface IModuleLoader : ISubscriber {
     val descriptorReader: IModuleDescriptorReader
-    fun loadModules(modulePaths: PathList): List<Result<LoadableModuleDescriptor>>
-    fun loadModule(modulePath: Path): Result<LoadableModuleDescriptor>
+    suspend fun loadModules(modulePaths: PathList): List<Result<LoadableModuleDescriptor>>
+    suspend fun loadModule(modulePath: Path): Result<LoadableModuleDescriptor>
     fun unloadModule(module: ILoadableModule, exceptionList: MutableExceptionListType): Boolean
     fun unloadModules(exceptionList: MutableExceptionListType): Int
     fun isAllDependenciesLoaded(uuid: UUID, exceptionList: MutableExceptionListType): Result<Boolean>

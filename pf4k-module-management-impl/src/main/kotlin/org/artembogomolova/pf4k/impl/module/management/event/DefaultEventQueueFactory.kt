@@ -19,7 +19,7 @@ private class DefaultEventQueue : IEventQueue {
     private val log = logger(this::class)
     private val subscribers: MutableMap<Class<ISubscriber>, SubscriberInfo> = ConcurrentHashMap()
 
-    override fun pushEvent(event: OnEvent): Boolean {
+    override suspend fun pushEvent(event: OnEvent): Boolean {
         for (subscriberInfo in subscribers.values) {
             val result = tryToHandleEvent(subscriberInfo, event)
             if (result) {
@@ -30,7 +30,7 @@ private class DefaultEventQueue : IEventQueue {
         return false
     }
 
-    private fun tryToHandleEvent(subscriberInfo: SubscriberInfo, event: OnEvent): Boolean {
+    private suspend fun tryToHandleEvent(subscriberInfo: SubscriberInfo, event: OnEvent): Boolean {
         val context = event.context
         if (supportPushEvent(subscriberInfo, context.javaClass).not()) {
             return false

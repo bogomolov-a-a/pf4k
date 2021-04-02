@@ -1,13 +1,12 @@
 package org.artembogomolova.pf4k.api.module.management.event
 
-import kotlin.reflect.KClass
 import org.artembogomolova.pf4k.api.module.MutableExceptionListType
 
-typealias SubscriberEventTypeList = List<KClass<IOnEventContext>>
+typealias SubscriberEventTypeList = List<Class<IOnEventContext>>
 
 interface ISubscriber {
     fun getAvailableEventContextTypes(): SubscriberEventTypeList
-    fun handleEvent(eventContext: IOnEventContext): Boolean
+    suspend fun handleEvent(eventContext: IOnEventContext): Boolean
 }
 
 interface IOnEventContext {
@@ -19,7 +18,7 @@ data class OnEvent(
 )
 
 interface IEventQueue {
-    fun pushEvent(event: OnEvent): Boolean
+    suspend fun pushEvent(event: OnEvent): Boolean
     fun subscribe(subscriber: ISubscriber): Result<Boolean>
 }
 

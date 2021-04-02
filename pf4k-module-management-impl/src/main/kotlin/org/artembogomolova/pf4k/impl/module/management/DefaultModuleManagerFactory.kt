@@ -15,7 +15,6 @@ import org.artembogomolova.pf4k.api.module.management.IModuleManager
 import org.artembogomolova.pf4k.api.module.management.IModuleManagerFactory
 import org.artembogomolova.pf4k.api.module.management.ModuleDescriptorReaderFactoryBuilder
 import org.artembogomolova.pf4k.api.module.management.ModuleLoaderFactoryBuilder
-import org.artembogomolova.pf4k.api.module.management.ModuleStatistic
 import org.artembogomolova.pf4k.api.module.management.types.ModuleStatistic
 import org.artembogomolova.pf4k.impl.module.management.descriptor.DefaultModuleDescriptorReaderFactory
 import org.artembogomolova.pf4k.impl.module.management.loading.DefaultModuleLoaderFactory

@@ -43,7 +43,7 @@ class DefaultModularizedApplication : IModularizedApplication {
         GlobalScope.launch {
             do {
                 delay(THREAD_INTERRUPT_INTERVAL)
-            } while (coreModule.runtimeStatus != LoadableModuleRuntimeStatus.STOPPED)
+            } while (coreModule.loadableModuleState.runtimeStatus != LoadableModuleRuntimeStatus.STOPPED)
         }
         val excludedModuleUuidList: List<String> = moduleManager.getExcludedModuleUuidList()
         saveExcludeModuleUuidList(applicationName, excludedModuleUuidList)
