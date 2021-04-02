@@ -10,6 +10,7 @@ plugins {
  */
 allprojects {
     val projectGroup: String by project
+    val projectVersion: String by project
     group = projectGroup
     version = getProjectVersion()
 }
@@ -86,6 +87,11 @@ subprojects {
                 from(components["java"])
             }
         }
+    }
+    dependencies {
+        "implementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
+        "implementation"("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.2")
+
     }
 }
 with(tasks.getByPath(":pf4k-plugins:publishPluginMavenPublicationToMavenRepository")) {

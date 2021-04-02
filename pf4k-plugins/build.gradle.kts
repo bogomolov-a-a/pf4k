@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":pf4k-api"))
     implementation(project(":pf4k-app-launcher"))
     implementation(project(":pf4k-app-impl"))
     implementation(project(":pf4k-api"))
