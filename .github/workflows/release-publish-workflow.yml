@@ -1,8 +1,7 @@
 name: Build and publish to registry
 on:
-  create:
-    tag: [ v* ]
-
+  release:
+    types: [ published ]
 env:
   IMAGE_NAME: ${{ github.event.repository.name }}
   REGISTRY_URL: ghcr.io
