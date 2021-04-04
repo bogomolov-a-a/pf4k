@@ -13,3 +13,11 @@ class ApiDescriptorNotFoundException(message: String, cause: Exception? = null) 
 
 open class BasicApplicationRuntimeException(message: String, cause: Exception? = null) : BasicModuleException(message, cause)
 class CoreModuleStartingException(message: String, cause: Exception? = null) : BasicApplicationRuntimeException(message, cause)
+class DescriptorReadingException(message: String, cause: Exception? = null) : BasicApplicationRuntimeException(message, cause)
+
+open class ResourceRuntimeException(message: String, cause: Exception? = null) : BasicModuleException(message, cause)
+class ResourceNotFoundException(message: String, cause: Exception? = null) : ResourceRuntimeException(message, cause)
+class ResourceAlreadyRegisteredException(message: String, cause: Exception? = null) : ResourceRuntimeException(message, cause)
+
+open class BasicIntercomException(message: String, cause: Exception? = null) : Exception(message, cause)
+class SubscribeRegisterException(message: String, cause: Exception? = null) : BasicIntercomException(message, cause)

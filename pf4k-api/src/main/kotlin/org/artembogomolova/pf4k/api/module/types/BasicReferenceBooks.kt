@@ -160,3 +160,10 @@ enum class ModuleType {
      */
     CORE
 }
+
+/**
+ * MessageType for module intercommunication
+ */
+enum class MessageType {
+    EXIT
+}

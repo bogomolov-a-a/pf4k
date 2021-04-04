@@ -1,7 +1,7 @@
 package org.artembogomolova.pf4k.plugins
 
 import java.util.jar.Attributes
-import org.artembogomolova.pf4k.api.app.APPLICATION_NAME_ATTRIBUTE_NAME
+import org.artembogomolova.pf4k.api.module.management.types.ApplicationDescriptor
 import org.artembogomolova.pf4k.impl.app.DefaultModularizedApplication
 import org.artembogomolova.pf4k.impl.launcher.DefaultApplicationLauncher
 import org.artembogomolova.pf4k.logger
@@ -111,9 +111,11 @@ class CommonAppLauncherPlugin : Plugin<Project> {
             manifest {
                 attributes[Attributes.Name.CLASS_PATH.toString()] = getClassPath(dependenciesSet)
                 attributes[Attributes.Name.MAIN_CLASS.toString()] = getMainClassName(properties)
-                attributes[DefaultApplicationLauncher.APPLICATION_IMPL_CLASS_NAME_PROPERTY] = getApplicationClassName(properties)
-                attributes[APPLICATION_NAME_ATTRIBUTE_NAME] = getApplicationName(properties, projectName)
             }
+            ApplicationDescriptor(
+                getApplicationName(properties, projectName),
+                getApplicationClassName(properties)
+            )
             log.debug("print manifest properties")
             manifest.attributes.forEach {
                 log.debug("attribute: ${it.key}, value: ${it.value}")

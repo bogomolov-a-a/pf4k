@@ -1,5 +1,6 @@
 package org.artembogomolova.pf4k.api.module.types
 
+import java.net.URLClassLoader
 import java.nio.file.Path
 import java.util.UUID
 import org.artembogomolova.pf4k.api.module.DependencyType
@@ -148,17 +149,73 @@ typealias InitializedResourceListType = List<Any>
  * @property [moduleRef] after resolving and loading in memory - reference to module to communicate with another modules
  * @author bogomolov-a-a
  */
-class LoadableModuleDescriptor(
-    val uuid: UUID,
-    val name: String,
-    val version: ApiVersion,
-    val description: String,
-    val modulePath: Path,
-    val availableStatus: LoadableModuleAvailableStatus,
-    val runtimeStatus: LoadableModuleRuntimeStatus,
-    val dependencyDescriptors: LoadableModuleDependencyDescriptorListType,
-    val apiPointDescriptors: ApiPointDescriptorListType
+data class LoadableModuleDescriptor(
+    var uuid: UUID,
+    var name: String,
+    var version: ApiVersion,
+    var description: String,
+    var availableStatus: LoadableModuleAvailableStatus,
+    var runtimeStatus: LoadableModuleRuntimeStatus,
+    var dependencyDescriptors: LoadableModuleDependencyDescriptorListType,
+    var apiPointDescriptors: ApiPointDescriptorListType,
+    var moduleClassName: String,
+    var moduleType: ModuleType
 ) {
     lateinit var moduleRef: ILoadableModule
-        internal set
+    lateinit var modulePath: Path
+    lateinit var moduleClassLoader: URLClassLoader
+}
+
+class LoadableModuleState(
+    /**
+     * Each module has uuid as primary key.
+     *
+     */
+    val uuid: UUID,
+
+    /**
+     * Each module has version in semantic versioning presentation
+     *
+     */
+    val version: ApiVersion,
+
+    /**
+     * Each module has unique name(as coordinate)
+     *
+     */
+    val name: String,
+
+    /**
+     *[ModuleType.PLUGIN] for extension module, and [ModuleType.CORE] for main module application
+     */
+    val moduleType: ModuleType,
+
+    /**
+     * Path, from which module loaded.
+     */
+    val modulePath: Path,
+    val apiPointDescriptors: ApiPointDescriptorListType,
+    val dependencyDescriptors: LoadableModuleDependencyDescriptorListType,
+    /**
+     * Current available module status in module registry
+     */
+    var availableStatus: LoadableModuleAvailableStatus = LoadableModuleAvailableStatus.INCLUDED,
+
+    /**
+     *  Current lifecycle status.
+     */
+    var runtimeStatus: LoadableModuleRuntimeStatus = LoadableModuleRuntimeStatus.LOADED
+) {
+    companion object {
+        fun from(descriptor: LoadableModuleDescriptor): LoadableModuleState = LoadableModuleState(
+            descriptor.uuid,
+            descriptor.version,
+            descriptor.name,
+            descriptor.moduleType,
+            descriptor.modulePath,
+            descriptor.apiPointDescriptors,
+            descriptor.dependencyDescriptors
+        )
+    }
+
 }

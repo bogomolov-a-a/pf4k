@@ -28,7 +28,7 @@ repositories {
 
 buildscript {
     dependencies {
-        classpath("org.artembogomolova.common:common-build-plugins:1.0.5")
+        classpath("org.artembogomolova.common:common-build-plugins:1.0.10")
     }
 
     val GITHUB_BUILD_PLUGINS_REPOSITORY_ENV_NAME = "GITHUB_BUILD_PLUGINS_REPOSITORY"
@@ -54,7 +54,6 @@ buildscript {
         }
 
     }
-
 }
 plugins.apply("common-base-plugin")
 val USERNAME_ENV_NAME = "USERNAME"
@@ -87,6 +86,11 @@ subprojects {
                 from(components["java"])
             }
         }
+    }
+    dependencies {
+        "implementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
+        "implementation"("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.2")
+
     }
 }
 with(tasks.getByPath(":pf4k-plugins:publishPluginMavenPublicationToMavenRepository")) {
