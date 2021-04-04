@@ -1,15 +1,14 @@
 package org.artembogomolova.pf4k.impl.module
 
-import org.artembogomolova.pf4k.api.module.OnAfterStartEventContext
-import org.artembogomolova.pf4k.api.module.OnAfterStopEventContext
-import org.artembogomolova.pf4k.api.module.OnBeforeStartEventContext
-import org.artembogomolova.pf4k.api.module.OnBeforeStopEventContext
-import org.artembogomolova.pf4k.api.module.OnInitializeResourcesEventContext
-import org.artembogomolova.pf4k.api.module.OnInitializedDependenciesWaitEventContext
-import org.artembogomolova.pf4k.api.module.OnPreconditionsValidateEventContext
-import org.artembogomolova.pf4k.api.module.OnResourcesReleaseEventContext
-
 import org.artembogomolova.pf4k.api.module.management.event.IOnEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnAfterStartEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnAfterStopEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnBeforeStartEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnBeforeStopEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnInitializeResourcesEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnInitializedDependenciesWaitEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnPreconditionsValidateEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnResourcesReleaseEventContext
 
 internal object ModuleEventHandler {
     suspend fun handleEvent(loadableModule: AbstractLoadableModule, eventContext: IOnEventContext): Boolean {

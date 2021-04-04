@@ -1,9 +1,12 @@
 package org.artembogomolova.pf4k.api.module.management.event
 
-import org.artembogomolova.pf4k.api.module.MutableExceptionListType
+import org.artembogomolova.pf4k.api.module.management.types.MutableExceptionListType
 
 typealias SubscriberEventTypeList = List<Class<IOnEventContext>>
 
+/***
+ *  Basic interface for subscribable
+ */
 interface ISubscriber {
     fun getAvailableEventContextTypes(): SubscriberEventTypeList
     suspend fun handleEvent(eventContext: IOnEventContext): Boolean

@@ -10,7 +10,6 @@ plugins {
  */
 allprojects {
     val projectGroup: String by project
-    val projectVersion: String by project
     group = projectGroup
     version = getProjectVersion()
 }
@@ -29,7 +28,7 @@ repositories {
 
 buildscript {
     dependencies {
-        classpath("org.artembogomolova.common:common-build-plugins:1.0.5")
+        classpath("org.artembogomolova.common:common-build-plugins:1.0.10")
     }
 
     val GITHUB_BUILD_PLUGINS_REPOSITORY_ENV_NAME = "GITHUB_BUILD_PLUGINS_REPOSITORY"

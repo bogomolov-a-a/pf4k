@@ -1,4 +1,4 @@
-package org.artembogomolova.pf4k.api.module
+package org.artembogomolova.pf4k.api.module.management.types
 
 import java.nio.file.Path
 import org.artembogomolova.pf4k.api.module.management.IModuleManager
@@ -6,16 +6,16 @@ import org.artembogomolova.pf4k.api.module.management.event.IOnEventContext
 import org.artembogomolova.pf4k.api.module.types.LoadableModuleDescriptor
 
 typealias  MutableExceptionListType = MutableList<Exception>
-typealias  ExceptionListType = List<Exception>
-typealias  DependencyPathListType = List<Path>
-
-/*********************
- ****Manager events***
- ********************/
 
 abstract class BaseEventContext(
     override val exceptionList: MutableExceptionListType
 ) : IOnEventContext
+
+typealias  DependencyPathListType = List<Path>
+
+/*********************
+ **Management events**
+ ********************/
 
 /**
  * Event triggered, when new module found in classpath.
@@ -38,7 +38,7 @@ data class OnResolvedEventContext(
  *  @property [exceptionList] list of exceptions thrown in event method handler.
  *  @author bogomolov-a-a
  */
-data class OnLoadEventContext(
+data class OnLoadedEventContext(
     val descriptor: LoadableModuleDescriptor,
     override val exceptionList: MutableExceptionListType
 ) : BaseEventContext(exceptionList)
@@ -81,6 +81,7 @@ data class OnFailedEventContext(
     val moduleManager: IModuleManager,
     override val exceptionList: MutableExceptionListType
 ) : BaseEventContext(exceptionList)
+
 /*********************
  ****Module events***
  ********************/

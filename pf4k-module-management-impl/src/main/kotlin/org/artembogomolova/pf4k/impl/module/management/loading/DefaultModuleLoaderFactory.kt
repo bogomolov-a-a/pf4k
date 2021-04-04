@@ -7,9 +7,7 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import org.artembogomolova.pf4k.api.BasicIntercomException
 import org.artembogomolova.pf4k.api.module.ILoadableModule
-import org.artembogomolova.pf4k.api.module.MutableExceptionListType
-import org.artembogomolova.pf4k.api.module.OnLoadEventContext
-import org.artembogomolova.pf4k.api.module.OnResolvedEventContext
+
 import org.artembogomolova.pf4k.api.module.management.IModuleDescriptorReader
 import org.artembogomolova.pf4k.api.module.management.IModuleLoader
 import org.artembogomolova.pf4k.api.module.management.IModuleLoaderFactory
@@ -20,6 +18,12 @@ import org.artembogomolova.pf4k.api.module.management.event.IEventQueue
 import org.artembogomolova.pf4k.api.module.management.event.IOnEventContext
 import org.artembogomolova.pf4k.api.module.management.event.OnEvent
 import org.artembogomolova.pf4k.api.module.management.event.SubscriberEventTypeList
+import org.artembogomolova.pf4k.api.module.management.types.MutableExceptionListType
+import org.artembogomolova.pf4k.api.module.management.types.OnAfterUnloadEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnBeforeUnloadEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnFailedEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnLoadedEventContext
+import org.artembogomolova.pf4k.api.module.management.types.OnResolvedEventContext
 import org.artembogomolova.pf4k.api.module.types.LoadableModuleDescriptor
 import org.artembogomolova.pf4k.api.module.types.LoadableModuleState
 import org.artembogomolova.pf4k.impl.module.management.descriptor.DefaultModuleDescriptorReaderFactory
@@ -41,8 +45,11 @@ internal class DefaultModuleLoader(override val descriptorReader: IModuleDescrip
     companion object {
         val SUPPORTED_EVENT_CONTEXT_LIST = listOf(
             OnResolvedEventContext::class.java,
-
-            )
+            OnLoadedEventContext::class.java,
+            OnBeforeUnloadEventContext::class.java,
+            OnAfterUnloadEventContext::class.java,
+            OnFailedEventContext::class.java
+        )
     }
 
     private val loadableModuleDescriptorMap: MutableMap<UUID, LoadableModuleDescriptor> = ConcurrentHashMap()
@@ -98,7 +105,7 @@ internal class DefaultModuleLoader(override val descriptorReader: IModuleDescrip
         descriptor.moduleRef = moduleRef
         descriptor.moduleClassLoader = moduleClassLoader
         loadableModuleDescriptorMap[moduleRef.loadableModuleState.uuid] = descriptor
-        val loadedEvent = OnLoadEventContext(
+        val loadedEvent = OnLoadedEventContext(
             descriptor,
             mutableListOf()
         )

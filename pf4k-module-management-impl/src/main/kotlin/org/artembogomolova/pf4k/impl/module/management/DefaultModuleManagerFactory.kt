@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import org.artembogomolova.pf4k.api.BasicModuleException
 import org.artembogomolova.pf4k.api.module.ICoreModule
 import org.artembogomolova.pf4k.api.module.ILoadableModule
-import org.artembogomolova.pf4k.api.module.MutableExceptionListType
 import org.artembogomolova.pf4k.api.module.management.ExcludedModuleListType
 import org.artembogomolova.pf4k.api.module.management.IModuleLoader
 import org.artembogomolova.pf4k.api.module.management.IModuleManager
@@ -16,6 +15,7 @@ import org.artembogomolova.pf4k.api.module.management.IModuleManagerFactory
 import org.artembogomolova.pf4k.api.module.management.ModuleDescriptorReaderFactoryBuilder
 import org.artembogomolova.pf4k.api.module.management.ModuleLoaderFactoryBuilder
 import org.artembogomolova.pf4k.api.module.management.types.ModuleStatistic
+import org.artembogomolova.pf4k.api.module.management.types.MutableExceptionListType
 import org.artembogomolova.pf4k.impl.module.management.descriptor.DefaultModuleDescriptorReaderFactory
 import org.artembogomolova.pf4k.impl.module.management.loading.DefaultModuleLoaderFactory
 import org.artembogomolova.pf4k.logger

@@ -5,10 +5,10 @@ import java.nio.file.Path
 import java.util.UUID
 import org.artembogomolova.pf4k.api.module.ICoreModule
 import org.artembogomolova.pf4k.api.module.ILoadableModule
-import org.artembogomolova.pf4k.api.module.MutableExceptionListType
 import org.artembogomolova.pf4k.api.module.management.event.ISubscriber
 import org.artembogomolova.pf4k.api.module.management.types.ApplicationDescriptor
 import org.artembogomolova.pf4k.api.module.management.types.ModuleStatistic
+import org.artembogomolova.pf4k.api.module.management.types.MutableExceptionListType
 import org.artembogomolova.pf4k.api.module.types.LoadableModuleDescriptor
 
 const val MODULE_DESCRIPTOR_PATH = "module-descriptor"
