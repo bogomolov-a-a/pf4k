@@ -11,4 +11,4 @@ fun logger(clazz: KClass<*>): Logger =
 
 const val THREAD_INTERRUPT_INTERVAL = 1000L
 
-val KOTLIN_OBJECT_MAPPER = ObjectMapper().registerModule(KotlinModule())
+val kotlinObjectMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())

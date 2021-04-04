@@ -10,7 +10,11 @@ import org.artembogomolova.pf4k.api.module.ILoadableModule
 import org.artembogomolova.pf4k.api.module.MutableExceptionListType
 import org.artembogomolova.pf4k.api.module.OnLoadEventContext
 import org.artembogomolova.pf4k.api.module.OnResolvedEventContext
-import org.artembogomolova.pf4k.api.module.management.*
+import org.artembogomolova.pf4k.api.module.management.IModuleDescriptorReader
+import org.artembogomolova.pf4k.api.module.management.IModuleLoader
+import org.artembogomolova.pf4k.api.module.management.IModuleLoaderFactory
+import org.artembogomolova.pf4k.api.module.management.ModuleDescriptorReaderFactoryBuilder
+import org.artembogomolova.pf4k.api.module.management.PathList
 import org.artembogomolova.pf4k.api.module.management.event.EventQueueFactoryBuilder
 import org.artembogomolova.pf4k.api.module.management.event.IEventQueue
 import org.artembogomolova.pf4k.api.module.management.event.IOnEventContext
@@ -51,8 +55,8 @@ internal class DefaultModuleLoader(override val descriptorReader: IModuleDescrip
 
     override suspend fun loadModules(modulePaths: PathList): List<Result<LoadableModuleDescriptor>> {
         val result: MutableList<Result<LoadableModuleDescriptor>> = mutableListOf()
-        modulePaths.forEach { loadModule(it) }
-        return result.toList()
+        modulePaths.forEach { result.add(loadModule(it)) }
+        return result
     }
 
     override suspend fun loadModule(modulePath: Path): Result<LoadableModuleDescriptor> {
@@ -65,7 +69,7 @@ internal class DefaultModuleLoader(override val descriptorReader: IModuleDescrip
         /**/
         val resolvedEvent = OnResolvedEventContext(
             modulePath,
-            descriptor.dependencyDescriptors.map { it.moduleDependency?.path!! }.toList(),
+            descriptor.dependencyDescriptors.map { it.moduleDependency!!.path }.toList(),
             mutableListOf()
         )
         if (eventQueue.pushEvent(OnEvent(resolvedEvent)).not()) {

@@ -3,12 +3,12 @@ package org.artembogomolova.pf4k.impl.module.management.descriptor
 import com.fasterxml.jackson.databind.ObjectReader
 import java.io.IOException
 import java.net.URLClassLoader
-import org.artembogomolova.pf4k.KOTLIN_OBJECT_MAPPER
 import org.artembogomolova.pf4k.api.BasicModuleException
 import org.artembogomolova.pf4k.api.module.management.IApplicationDescriptorReader
 import org.artembogomolova.pf4k.api.module.management.IApplicationDescriptorReaderFactory
 import org.artembogomolova.pf4k.api.module.management.types.APPLICATION_DESCRIPTOR_PATH
 import org.artembogomolova.pf4k.api.module.management.types.ApplicationDescriptor
+import org.artembogomolova.pf4k.kotlinObjectMapper
 
 class DefaultApplicationDescriptorReaderFactory : IApplicationDescriptorReaderFactory {
     override fun createApplicationDescriptorReader(): IApplicationDescriptorReader = DefaultApplicationDescriptorReader()
@@ -17,7 +17,7 @@ class DefaultApplicationDescriptorReaderFactory : IApplicationDescriptorReaderFa
 internal class DefaultApplicationDescriptorReader : IApplicationDescriptorReader {
 
     companion object {
-        val APPLICATION_DESCRIPTOR_TYPE_READER: ObjectReader = KOTLIN_OBJECT_MAPPER.reader().forType(ApplicationDescriptor::class.java)
+        private val APPLICATION_DESCRIPTOR_TYPE_READER: ObjectReader = kotlinObjectMapper.reader().forType(ApplicationDescriptor::class.java)
     }
 
     override fun readFromModuleJar(moduleClassLoader: URLClassLoader): Result<ApplicationDescriptor> {
