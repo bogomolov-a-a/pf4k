@@ -2,19 +2,19 @@ package org.artembogomolova.pf4k.impl.module.management.event
 
 import java.util.concurrent.ConcurrentHashMap
 import org.artembogomolova.pf4k.api.SubscribeRegisterException
-import org.artembogomolova.pf4k.api.module.management.event.IEventQueue
-import org.artembogomolova.pf4k.api.module.management.event.IEventQueueFactory
+import org.artembogomolova.pf4k.api.module.management.event.IEventBus
+import org.artembogomolova.pf4k.api.module.management.event.IEventBusFactory
 import org.artembogomolova.pf4k.api.module.management.event.IOnEventContext
 import org.artembogomolova.pf4k.api.module.management.event.ISubscriber
 import org.artembogomolova.pf4k.api.module.management.event.OnEvent
 import org.artembogomolova.pf4k.api.module.management.types.SubscriberInfo
 import org.artembogomolova.pf4k.logger
 
-class DefaultEventQueueFactory : IEventQueueFactory {
-    override fun createEventQueue(): IEventQueue = DefaultEventQueue()
+class DefaultEventBusFactory : IEventBusFactory {
+    override fun createEventBus(): IEventBus = DefaultEventBus()
 }
 
-private class DefaultEventQueue : IEventQueue {
+private class DefaultEventBus : IEventBus {
 
     private val log = logger(this::class)
     private val subscribers: MutableMap<Class<ISubscriber>, SubscriberInfo> = ConcurrentHashMap()

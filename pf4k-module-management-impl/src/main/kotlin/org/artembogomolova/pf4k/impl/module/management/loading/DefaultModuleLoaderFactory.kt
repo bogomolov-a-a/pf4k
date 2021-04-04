@@ -14,7 +14,7 @@ import org.artembogomolova.pf4k.api.module.management.IModuleLoaderFactory
 import org.artembogomolova.pf4k.api.module.management.ModuleDescriptorReaderFactoryBuilder
 import org.artembogomolova.pf4k.api.module.management.PathList
 import org.artembogomolova.pf4k.api.module.management.event.EventQueueFactoryBuilder
-import org.artembogomolova.pf4k.api.module.management.event.IEventQueue
+import org.artembogomolova.pf4k.api.module.management.event.IEventBus
 import org.artembogomolova.pf4k.api.module.management.event.IOnEventContext
 import org.artembogomolova.pf4k.api.module.management.event.OnEvent
 import org.artembogomolova.pf4k.api.module.management.event.SubscriberEventTypeList
@@ -27,7 +27,7 @@ import org.artembogomolova.pf4k.api.module.management.types.OnResolvedEventConte
 import org.artembogomolova.pf4k.api.module.types.LoadableModuleDescriptor
 import org.artembogomolova.pf4k.api.module.types.LoadableModuleState
 import org.artembogomolova.pf4k.impl.module.management.descriptor.DefaultModuleDescriptorReaderFactory
-import org.artembogomolova.pf4k.impl.module.management.event.DefaultEventQueueFactory
+import org.artembogomolova.pf4k.impl.module.management.event.DefaultEventBusFactory
 
 
 class DefaultModuleLoaderFactory : IModuleLoaderFactory {
@@ -53,11 +53,11 @@ internal class DefaultModuleLoader(override val descriptorReader: IModuleDescrip
     }
 
     private val loadableModuleDescriptorMap: MutableMap<UUID, LoadableModuleDescriptor> = ConcurrentHashMap()
-    private val eventQueue: IEventQueue = EventQueueFactoryBuilder
-        .createEventQueue(DefaultEventQueueFactory::class.java.name).createEventQueue()
+    private val eventBus: IEventBus = EventQueueFactoryBuilder
+        .createEventBusFactory(DefaultEventBusFactory::class.java.name).createEventBus()
 
     init {
-        eventQueue.subscribe(this)
+        eventBus.subscribe(this)
     }
 
     override suspend fun loadModules(modulePaths: PathList): List<Result<LoadableModuleDescriptor>> {
@@ -79,7 +79,7 @@ internal class DefaultModuleLoader(override val descriptorReader: IModuleDescrip
             descriptor.dependencyDescriptors.map { it.moduleDependency!!.path }.toList(),
             mutableListOf()
         )
-        if (eventQueue.pushEvent(OnEvent(resolvedEvent)).not()) {
+        if (eventBus.pushEvent(OnEvent(resolvedEvent)).not()) {
             return Result.failure(createIntercomException(resolvedEvent))
         }
 
@@ -109,7 +109,7 @@ internal class DefaultModuleLoader(override val descriptorReader: IModuleDescrip
             descriptor,
             mutableListOf()
         )
-        if (eventQueue.pushEvent(OnEvent(loadedEvent)).not()) {
+        if (eventBus.pushEvent(OnEvent(loadedEvent)).not()) {
             return Result.failure(createIntercomException(loadedEvent))
         }
         return Result.success(descriptor)
