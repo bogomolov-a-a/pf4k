@@ -2,9 +2,7 @@ package org.artembogomolova.pf4k.impl.app
 
 import java.nio.file.Paths
 import java.util.prefs.Preferences
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.artembogomolova.pf4k.THREAD_INTERRUPT_INTERVAL
 import org.artembogomolova.pf4k.api.CoreModuleStartingException
 import org.artembogomolova.pf4k.api.app.APPLICATION_PATH_PROPERTY
@@ -40,11 +38,9 @@ class DefaultModularizedApplication : IModularizedApplication {
             )
         }
         val coreModule = moduleResult.getOrNull()!!
-        GlobalScope.launch {
-            do {
-                delay(THREAD_INTERRUPT_INTERVAL)
-            } while (coreModule.loadableModuleState.runtimeStatus != LoadableModuleRuntimeStatus.STOPPED)
-        }
+        do {
+            delay(THREAD_INTERRUPT_INTERVAL)
+        } while (coreModule.loadableModuleState.runtimeStatus != LoadableModuleRuntimeStatus.STOPPED)
         val excludedModuleUuidList: List<String> = moduleManager.getExcludedModuleUuidList()
         saveExcludeModuleUuidList(applicationName, excludedModuleUuidList)
     }

@@ -46,6 +46,8 @@ private class ModuleManager(
         const val CORE_MODULE_PATH_PATTERN: String = "%s/core/module.jar"
     }
 
+    private lateinit var coreModule: ICoreModule
+    private val statistic: ModuleStatistic = ModuleStatistic()
     private val log = logger(this::class)
     override fun startModule(module: ILoadableModule, exceptionList: MutableExceptionListType): Boolean = true
 
@@ -53,9 +55,11 @@ private class ModuleManager(
 
     override fun getModuleByUuid(uuid: UUID): Result<ILoadableModule> = Result.failure(BasicModuleException(""))
 
-    override fun getCoreModule(exceptionList: MutableExceptionListType): ILoadableModule = throw BasicModuleException("")
+    override fun getCoreModule(exceptionList: MutableExceptionListType): ILoadableModule =
+        coreModule
 
-    override fun getModuleStatistic(): ModuleStatistic = ModuleStatistic()
+    @Synchronized
+    override fun getModuleStatistic(): ModuleStatistic = statistic.copy()
 
     override fun excludeModuleByUuid(uuid: UUID, exceptionList: MutableExceptionListType): Boolean = false
 
@@ -67,16 +71,14 @@ private class ModuleManager(
         val coreModulePath = CORE_MODULE_PATH_PATTERN.format(applicationStartPath)
         log.info("try to load core module from '$coreModulePath'")
         val result = moduleLoader.loadModule(Paths.get(coreModulePath))
-        if (!result.isFailure) {
+        if (result.isFailure) {
             log.error("while loading module from '$coreModulePath' occurred exception with message: '${result.exceptionOrNull()?.message}'")
             return Result.failure(result.exceptionOrNull()!!)
         }
         val coreModuleDescriptor = result.getOrNull()!!
-        val coreModule = coreModuleDescriptor.moduleRef as ICoreModule
+        coreModule = coreModuleDescriptor.moduleRef as ICoreModule
         log.info("core module with id ${coreModule.loadableModuleState.uuid} from '$coreModulePath' loaded!")
-        GlobalScope.launch {
-            coreModule.run(args)
-        }
+        GlobalScope.launch { coreModule.run(args) }
         return Result.success(coreModule)
     }
 
