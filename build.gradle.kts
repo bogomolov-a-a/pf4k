@@ -28,7 +28,7 @@ repositories {
 
 buildscript {
     dependencies {
-        classpath("org.artembogomolova.common:common-build-plugins:1.0.12")
+        classpath("org.artembogomolova.common:common-build-plugins:1.1.0")
     }
 
     val GITHUB_BUILD_PLUGINS_REPOSITORY_ENV_NAME = "GITHUB_BUILD_PLUGINS_REPOSITORY"

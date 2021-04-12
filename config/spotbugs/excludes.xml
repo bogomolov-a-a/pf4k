@@ -42,4 +42,28 @@
       <Class name="org.artembogomolova.pf4k.impl.module.management.loading.DefaultModuleLoader"/>
     </And>
   </Match>
+  <Match>
+    <And>
+      <Bug code="BC" category="CORRECTNESS"/>
+      <Class name="org.artembogomolova.pf4k.impl.launcher.test.DefaultApplicationLauncherTest"/>
+    </And>
+  </Match>
+  <Match>
+    <And>
+      <Bug code="RCN" category="STYLE"/>
+      <Class name="org.artembogomolova.pf4k.impl.launcher.test.DefaultApplicationLauncherTest"/>
+    </And>
+  </Match>
+  <Match>
+    <And>
+      <Bug code="NP" category="CORRECTNESS"/>
+      <Class name="org.artembogomolova.pf4k.impl.module.management.event.DefaultEventBus$pushEvent$1"/>
+    </And>
+  </Match>
+  <Match>
+    <And>
+      <Bug code="RCN" category="STYLE"/>
+      <Class name="org.artembogomolova.pf4k.impl.module.management.ModuleManager"/>
+    </And>
+  </Match>
 </FindBugsFilter>

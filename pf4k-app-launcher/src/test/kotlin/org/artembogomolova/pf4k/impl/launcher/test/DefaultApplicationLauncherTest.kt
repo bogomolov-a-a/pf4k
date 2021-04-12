@@ -8,27 +8,38 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.MockitoSession
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyArray
+import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 internal class DefaultApplicationLauncherTest {
 
+    companion object {
+        const val TEST_APPLICATION_NAME: String = "test-application"
+        val APPLICATION_IMPL_CLASS_NAME: String = DefaultModularizedApplication::class.java.name
+    }
+
     private lateinit var session: MockitoSession
+    private lateinit var applicationLauncher: DefaultApplicationLauncher
 
     @BeforeEach
     fun init() {
         session = Mockito.mockitoSession().initMocks(this).startMocking()
+        applicationLauncher = mock(defaultAnswer = Mockito.CALLS_REAL_METHODS)
+        doReturn(ApplicationDescriptor(TEST_APPLICATION_NAME, APPLICATION_IMPL_CLASS_NAME))
+            .whenever(applicationLauncher)
+            .getApplicationDescriptor()
+        doNothing().whenever(applicationLauncher)
+            .runApplicationWithArgs(any(), any(), anyArray())
+
     }
 
     @Test
     fun withNoArgsExec() {
-        val application = mock<DefaultApplicationLauncher>(defaultAnswer = Mockito.CALLS_REAL_METHODS)
-        doReturn(ApplicationDescriptor("test-application", DefaultModularizedApplication::class.java.name))
-            .whenever(application)
-            .getApplicationDescriptor()
-
-        application.mainMethod(arrayOf())
+        applicationLauncher.mainMethod(arrayOf())
     }
 
     @AfterEach
