@@ -1,5 +1,3 @@
-# pf4k
-
 Plugin framework for Kotlin
 
 Based on ideas:
