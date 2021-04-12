@@ -8,4 +8,5 @@ Based on ideas:
 
 ## Table of Content
 
-- [Motivation](motivation.html)
+- [Motivation](contents/motivation.html)
+- [Application structure](contents/application-structure.md)
