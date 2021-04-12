@@ -2,7 +2,7 @@ theme: jekyll-theme-minimal
 encoding: utf-8
 lsi: false
 safe: true
-source: docs
+source: [ /docs ]
 incremental: false
 highlighter: rouge
 gist:
