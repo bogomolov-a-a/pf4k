@@ -1,1 +1,9 @@
 theme: jekyll-theme-minimal
+encoding: utf-8
+livereload: true
+markdown: kramdown
+kramdown:
+  hard_wrap: true
+  enable_coderay: true
+  show_warnings: true
+  syntax_highlighter: rouge
