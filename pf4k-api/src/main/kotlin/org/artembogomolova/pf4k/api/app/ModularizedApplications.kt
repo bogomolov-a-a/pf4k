@@ -6,9 +6,6 @@ const val MODULE_ID_SEPARATOR = ","
 
 const val APPLICATION_PATH_PROPERTY = "user.dir"
 
-/**
- * Interface for
- */
 interface IModularizedApplication {
 
     suspend fun run(applicationName: String, args: Array<String>)
